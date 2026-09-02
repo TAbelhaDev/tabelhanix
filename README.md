@@ -1,11 +1,11 @@
 <div align="center">
 
-# TabelaNix
+# TAbelhaNix
 
 **A NixOS flake installer for the niri + DankMaterialShell stack** — the
-NixOS sibling of [TabelaArch](https://github.com/TabelaDev/tabelaarch),
+NixOS sibling of [TAbelhaArch](https://github.com/TAbelhaDev/tabelhaarch),
 targeting the same desktop stack defined in
-[TabelaOS](https://github.com/TabelaDev/tabelaos).
+[TAbelhaOS](https://github.com/TAbelhaDev/tabelhaos).
 
 **English** · [Português](README.pt-BR.md)
 
@@ -19,22 +19,22 @@ targeting the same desktop stack defined in
 
 > **Status: placeholder.** No flake, no modules, no install logic yet — this
 > repo exists to reserve the name and link the family together. See
-> [TabelaOS](https://github.com/TabelaDev/tabelaos) for what the stack this
+> [TAbelhaOS](https://github.com/TAbelhaDev/tabelhaos) for what the stack this
 > will eventually install actually is.
 
 ## What this will be
 
-A flake-based NixOS configuration covering the same ground TabelaArch's
+A flake-based NixOS configuration covering the same ground TAbelhaArch's
 `install/` covers for Arch, targeting:
 
 - **niri** via [sodiboo/niri-flake](https://github.com/sodiboo/niri-flake)
 - **DankMaterialShell** via its own NixOS + home-manager modules
 - **NVIDIA Optimus/PRIME** via `hardware.nvidia.prime.*`, per
-  [TabelaOS's `spec/optimus.md`](https://github.com/TabelaDev/tabelaos/blob/main/spec/optimus.md)
+  [TAbelhaOS's `spec/optimus.md`](https://github.com/TAbelhaDev/tabelhaos/blob/main/spec/optimus.md)
 - The package set in
-  [TabelaOS's `manifest/packages.toml`](https://github.com/TabelaDev/tabelaos/blob/main/manifest/packages.toml),
+  [TAbelhaOS's `manifest/packages.toml`](https://github.com/TAbelhaDev/tabelhaos/blob/main/manifest/packages.toml),
   using its `nixpkgs` column
 
-TabelaArch and TabelaNix don't share install code — bash/gum and Nix modules
+TAbelhaArch and TAbelhaNix don't share install code — bash/gum and Nix modules
 are different enough that forcing a shared abstraction would fight both.
-They share only the target-stack definition, in TabelaOS.
+They share only the target-stack definition, in TAbelhaOS.

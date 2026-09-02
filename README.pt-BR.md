@@ -1,10 +1,10 @@
 <div align="center">
 
-# TabelaNix
+# TAbelhaNix
 
 **Um instalador NixOS via flake pro stack niri + DankMaterialShell** — o
-irmão NixOS do [TabelaArch](https://github.com/TabelaDev/tabelaarch), com o
-mesmo stack alvo definido no [TabelaOS](https://github.com/TabelaDev/tabelaos).
+irmão NixOS do [TAbelhaArch](https://github.com/TAbelhaDev/tabelhaarch), com o
+mesmo stack alvo definido no [TAbelhaOS](https://github.com/TAbelhaDev/tabelhaos).
 
 [English](README.md) · **Português**
 
@@ -18,24 +18,24 @@ mesmo stack alvo definido no [TabelaOS](https://github.com/TabelaDev/tabelaos).
 
 > **Status: placeholder.** Sem flake, sem módulos, sem lógica de instalação
 > ainda — este repo existe pra reservar o nome e linkar a família. Ver o
-> [TabelaOS](https://github.com/TabelaDev/tabelaos) pra saber o que é o
+> [TAbelhaOS](https://github.com/TAbelhaDev/tabelhaos) pra saber o que é o
 > stack que isto vai instalar quando existir.
 
 ## O que isto vai ser
 
 Uma configuração NixOS via flake cobrindo o mesmo terreno que o `install/`
-do TabelaArch cobre pro Arch, tendo como alvo:
+do TAbelhaArch cobre pro Arch, tendo como alvo:
 
 - **niri** via [sodiboo/niri-flake](https://github.com/sodiboo/niri-flake)
 - **DankMaterialShell** via seus próprios módulos NixOS + home-manager
 - **NVIDIA Optimus/PRIME** via `hardware.nvidia.prime.*`, conforme o
-  [`spec/optimus.md`](https://github.com/TabelaDev/tabelaos/blob/main/spec/optimus.md)
-  do TabelaOS
+  [`spec/optimus.md`](https://github.com/TAbelhaDev/tabelhaos/blob/main/spec/optimus.md)
+  do TAbelhaOS
 - O conjunto de pacotes em
-  [`manifest/packages.toml`](https://github.com/TabelaDev/tabelaos/blob/main/manifest/packages.toml)
-  do TabelaOS, usando a coluna `nixpkgs`
+  [`manifest/packages.toml`](https://github.com/TAbelhaDev/tabelhaos/blob/main/manifest/packages.toml)
+  do TAbelhaOS, usando a coluna `nixpkgs`
 
-TabelaArch e TabelaNix não compartilham código de instalação — bash/gum e
+TAbelhaArch e TAbelhaNix não compartilham código de instalação — bash/gum e
 módulos Nix são diferentes o suficiente pra que forçar uma abstração
 compartilhada prejudicasse os dois. Eles compartilham só a definição do
-stack alvo, no TabelaOS.
+stack alvo, no TAbelhaOS.

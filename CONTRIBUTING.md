@@ -1,4 +1,4 @@
-# Contributing to TabelaNix
+# Contributing to TAbelhaNix
 
 **English** · [Português](CONTRIBUTING.pt-BR.md)
 
@@ -19,7 +19,7 @@ Open an [issue](../../issues/new/choose) using the appropriate template.
 
 ## Language
 
-The convention across every TabelaDev project, so that nothing has to be
+The convention across every TAbelhaDev project, so that nothing has to be
 decided again per repo:
 
 **English, no exceptions** — identifiers, file names, routes, query
