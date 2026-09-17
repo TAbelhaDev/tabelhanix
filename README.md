@@ -21,32 +21,46 @@ targeting the same desktop stack defined in
 
 ## How to use
 
-### Interactive installation
+### Boot from USB (recommended)
+
+1. Build the ISO (or download from GitHub Releases):
+   ```bash
+   nix build .#nixosConfigurations.tabelhanix-iso.config.system.build.isoImage
+   # ISO is at ./result/iso/nixos-*.iso
+   ```
+
+2. Flash to USB (e.g. with `dd` or [Etcher](https://etcher.balena.io/)):
+   ```bash
+   sudo dd if=./result/iso/nixos-*.iso of=/dev/sdX bs=4M status=progress
+   ```
+
+3. Boot from USB → auto-login into niri + DankMaterialShell live session
+
+4. Open a terminal and run:
+   ```bash
+   tabelhanix-install
+   ```
+   This clones the repo and runs the interactive installer.
+
+### Manual installation (existing NixOS)
 
 ```bash
-# Clone the repository
 git clone https://github.com/TAbelhaDev/tabelhanix.git
 cd tabelhanix
-
-# Run the installer
-./scripts/install.sh
+sudo nixos-rebuild switch --flake .#tabelhanix
 ```
 
-### Manual installation
+### Available configurations
 
-```bash
-# Copy configuration
-sudo cp modules/nixos.nix /etc/nixos/tabelhanix/
-sudo cp modules/nvidia.nix /etc/nixos/tabelhanix/  # optional
-
-# Generate hardware configuration
-sudo nixos-generate-config --show-hardware-config > /etc/nixos/hardware-configuration.nix
-
-# Edit /etc/nixos/configuration.nix as needed
-
-# Build and install
-sudo nixos-rebuild switch
-```
+| Config | Description |
+|--------|-------------|
+| `tabelhanix` | Default desktop (no GPU accel) |
+| `tabelhanix-nvidia` | NVIDIA + laptop + gaming + dev |
+| `tabelhanix-minimal` | Bare minimum, no extra packages |
+| `tabelhanix-laptop` | Laptop optimizations (TLP, Bluetooth) |
+| `tabelhanix-intel` | Intel GPU + VA-API |
+| `tabelhanix-amd` | AMD GPU + Vulkan |
+| `tabelhanix-iso` | Bootable live USB |
 
 ## What this will be
 
