@@ -26,14 +26,33 @@
     impermanence.url = "github:nix-community/impermanence";
   };
 
-  outputs = { self, nixpkgs, niri, DankMaterialShell, home-manager, sops-nix, impermanence, ... }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      niri,
+      DankMaterialShell,
+      home-manager,
+      sops-nix,
+      impermanence,
+      ...
+    }:
     let
-      supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: nixpkgs.legacyPackages.${system});
 
       # Helper to create a NixOS configuration
-      mkNixosConfig = { system ? "x86_64-linux", modules ? [], profile ? {} }:
+      mkNixosConfig =
+        {
+          system ? "x86_64-linux",
+          modules ? [ ],
+          profile ? { },
+          homeConfig ? ./home/default.nix,
+        }:
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit sops-nix impermanence; };
@@ -47,7 +66,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.tabelha = import ./home/default.nix;
+              home-manager.users.tabelha = import homeConfig;
             }
             # Basic root filesystem for configurations without impermanence
             {
@@ -57,10 +76,12 @@
               };
             }
             # Override niri package to use nixpkgs version (niri-flake has libdisplay-info_0_2 issue)
-            {
-              programs.niri.package = nixpkgs.lib.mkForce nixpkgs.legacyPackages.x86_64-linux.niri;
-            }
-          ] ++ modules ++ [ profile ];
+            ({ pkgs, ... }: {
+              programs.niri.package = pkgs.niri;
+            })
+          ]
+          ++ modules
+          ++ [ profile ];
         };
 
       # Default options for all configurations
@@ -88,9 +109,6 @@
 
         # Configuration with NVIDIA support
         tabelhanix-nvidia = mkNixosConfig {
-          modules = [
-            ./modules/hardware/laptop.nix
-          ];
           profile = {
             tabelhanix = {
               gpu = "nvidia";
@@ -109,9 +127,7 @@
 
         # Minimal configuration
         tabelhanix-minimal = mkNixosConfig {
-          modules = [
-            ./modules/hardware/laptop.nix
-          ];
+          homeConfig = ./home/minimal.nix;
           profile = {
             tabelhanix = {
               gpu = "none";
@@ -213,8 +229,16 @@
         default = nixpkgsFor.${system}.emptyDirectory;
       });
 
-      # Checks (evaluation-only, VM tests need a builder)
-      checks = nixpkgs.lib.genAttrs supportedSystems (system: { });
+      # Checks
+      checks = nixpkgs.lib.genAttrs supportedSystems (
+        system:
+        nixpkgs.lib.optionalAttrs (system == "x86_64-linux") (
+          import ./tests {
+            pkgs = nixpkgsFor.${system};
+            lib = nixpkgs.lib;
+          }
+        )
+      );
 
       # Overlays
       overlays.default = final: prev: {
