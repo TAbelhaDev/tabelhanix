@@ -206,6 +206,78 @@
             };
           };
         };
+
+        # Live ISO — bootable USB with full TAbelhaNix stack
+        tabelhanix-iso = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit sops-nix impermanence; };
+          modules = [
+            # NixOS installer base (minimal with autologin)
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+
+            # Core TAbelhaNix modules
+            ./modules/nixos.nix
+            niri.nixosModules.niri
+            DankMaterialShell.nixosModules.dank-material-shell
+            ./modules/dms.nix
+            ./modules/nvidia.nix
+
+            # Home Manager for live user
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.nixos = import ./home/default.nix;
+            }
+
+            # Override niri package to use nixpkgs version
+            ({ pkgs, ... }: {
+              programs.niri.package = pkgs.niri;
+            })
+
+            # Live ISO specifics
+            ({ pkgs, lib, ... }: {
+              # Autologin on tty1 → niri-session
+              systemd.services."autologin@tty1" = {
+                wantedBy = [ "multi-user.target" ];
+                after = [ "systemd-user-sessions.service" ];
+                serviceConfig = {
+                  ExecStart = [
+                    ""
+                    "@${pkgs.util-linux}/bin/agetty --autologin nixos --noclear %I $TERM"
+                  ];
+                  Type = "idle";
+                };
+              };
+
+              programs.bash.loginShellInit = ''
+                if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+                  exec niri-session
+                fi
+              '';
+
+              # Clone repo + install script on PATH
+              environment.systemPackages = with pkgs; [
+                gitMinimal
+                (writeShellScriptBin "tabelhanix-install" ''
+                  echo "Cloning TAbelhaNix..."
+                  git clone https://github.com/TAbelhaDev/tabelhanix.git /home/nixos/tabelhanix
+                  cd /home/nixos/tabelhanix
+                  bash scripts/install.sh
+                '')
+              ];
+
+              # Allow passwordless sudo for install
+              security.sudo.wheelNeedsPassword = false;
+
+              # Ensure nix has flakes enabled
+              nix.settings.experimental-features = [
+                "nix-command"
+                "flakes"
+              ];
+            })
+          ];
+        };
       };
 
       # Development shell
@@ -224,7 +296,7 @@
       # Formatter
       formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt-rfc-style);
 
-      # Packages (for future use)
+      # Packages
       packages = forAllSystems (system: {
         default = nixpkgsFor.${system}.emptyDirectory;
       });
