@@ -1,5 +1,10 @@
 # TAbelhaNix — DankMaterialShell configuration
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # DankMaterialShell configuration

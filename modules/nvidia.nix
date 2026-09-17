@@ -1,8 +1,13 @@
 # TAbelhaNix — NVIDIA Optimus/PRIME configuration
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
-  cfg = config.tabelhanix.nvidia or {};
+  cfg = config.tabelhanix.nvidia or { };
 in
 {
   options.tabelhanix.nvidia = {
@@ -19,7 +24,11 @@ in
     };
 
     prime = lib.mkOption {
-      type = lib.types.enum [ "offload" "sync" "reverse-sync" ];
+      type = lib.types.enum [
+        "offload"
+        "sync"
+        "reverse-sync"
+      ];
       default = "offload";
       description = "PRIME mode: offload (switch GPUs), sync (both active), reverse-sync (dGPU renders for iGPU)";
     };

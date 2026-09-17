@@ -4,7 +4,12 @@
 {
   options.tabelhanix = {
     gpu = lib.mkOption {
-      type = lib.types.enum [ "none" "intel" "amd" "nvidia" ];
+      type = lib.types.enum [
+        "none"
+        "intel"
+        "amd"
+        "nvidia"
+      ];
       default = "none";
       description = "GPU type to configure";
     };

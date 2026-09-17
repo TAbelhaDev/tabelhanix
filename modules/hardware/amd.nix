@@ -1,5 +1,10 @@
 # TAbelhaNix — AMD GPU configuration
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   config = lib.mkIf (config.tabelhanix.gpu == "amd") {

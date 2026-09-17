@@ -1,5 +1,11 @@
 # TAbelhaNix — Secrets management with sops-nix
-{ config, lib, pkgs, sops-nix, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  sops-nix,
+  ...
+}:
 
 {
   imports = [ sops-nix.nixosModules.sops ];
@@ -18,7 +24,7 @@
       defaultSopsFile = ../../secrets/secrets.yaml;
       age = {
         keyFile = config.tabelhanix.sops.ageKeyFile;
-        sshKeyPaths = [];
+        sshKeyPaths = [ ];
       };
     };
 

@@ -1,5 +1,10 @@
 # TAbelhaNix — Minimal Home Manager configuration
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # Home Manager state version

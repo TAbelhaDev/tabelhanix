@@ -1,5 +1,10 @@
 # TAbelhaNix — Laptop configuration
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   config = lib.mkIf config.tabelhanix.laptop {

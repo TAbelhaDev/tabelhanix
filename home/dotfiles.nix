@@ -1,5 +1,10 @@
 # TAbelhaNix — Dotfiles configuration for CLI tools
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # Fish shell configuration

@@ -1,5 +1,11 @@
 # TAbelhaNix — Impermanence (root on tmpfs)
-{ config, lib, pkgs, impermanence, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  impermanence,
+  ...
+}:
 
 {
   imports = [ impermanence.nixosModules.impermanence ];
@@ -21,7 +27,10 @@
       "/" = {
         device = "tmpfs";
         fsType = "tmpfs";
-        options = [ "relatime" "mode=755" ];
+        options = [
+          "relatime"
+          "mode=755"
+        ];
       };
 
       "/persist" = {
@@ -45,73 +54,82 @@
         "/var/lib/systemd"
         "/var/log"
         "/etc/NetworkManager/system-connections"
-      ] ++ lib.optionals config.tabelhanix.postgresql [
+      ]
+      ++ lib.optionals config.tabelhanix.postgresql [
         "/var/lib/postgresql"
-      ] ++ lib.optionals config.tabelhanix.redis [
+      ]
+      ++ lib.optionals config.tabelhanix.redis [
         "/var/lib/redis"
-      ] ++ lib.optionals config.tabelhanix.vm [
+      ]
+      ++ lib.optionals config.tabelhanix.vm [
         "/var/lib/libvirt"
       ];
 
       # User state
-      users.${config.tabelhanix.username} = let
-        persistHomeDirs = if config.tabelhanix.impermanence.persistHome then [
-          "${config.users.users.${config.tabelhanix.username}.home}"
-        ] else [];
-      in {
-        directories = persistHomeDirs ++ [
-          # Development
-          ".local/share/mise"
-          ".local/share/direnv"
+      users.${config.tabelhanix.username} =
+        let
+          persistHomeDirs =
+            if config.tabelhanix.impermanence.persistHome then
+              [
+                "${config.users.users.${config.tabelhanix.username}.home}"
+              ]
+            else
+              [ ];
+        in
+        {
+          directories = persistHomeDirs ++ [
+            # Development
+            ".local/share/mise"
+            ".local/share/direnv"
 
-          # Git
-          ".config/gh"
+            # Git
+            ".config/gh"
 
-          # Neovim
-          ".local/state/nvim"
-          ".cache/nvim"
+            # Neovim
+            ".local/state/nvim"
+            ".cache/nvim"
 
-          # Fish
-          ".config/fish"
-          ".local/share/fish"
+            # Fish
+            ".config/fish"
+            ".local/share/fish"
 
-          # Tmux
-          ".tmux"
+            # Tmux
+            ".tmux"
 
-          # Niri
-          ".config/niri"
+            # Niri
+            ".config/niri"
 
-          # DMS
-          ".config/dank-material-shell"
+            # DMS
+            ".config/dank-material-shell"
 
-          # Yazi
-          ".local/share/yazi"
-          ".config/yazi"
+            # Yazi
+            ".local/share/yazi"
+            ".config/yazi"
 
-          # Starship
-          ".cache/starship"
+            # Starship
+            ".cache/starship"
 
-          # Zoxide
-          ".local/share/zoxide"
+            # Zoxide
+            ".local/share/zoxide"
 
-          # Browser (if installed)
-          ".config/BraveSoftware"
-          ".config/chromium"
-          ".mozilla"
+            # Browser (if installed)
+            ".config/BraveSoftware"
+            ".config/chromium"
+            ".mozilla"
 
-          # Other
-          ".local/share/keyrings"
-        ];
+            # Other
+            ".local/share/keyrings"
+          ];
 
-        files = [
-          # Git
-          ".gitconfig"
-          ".gitignore_global"
+          files = [
+            # Git
+            ".gitconfig"
+            ".gitignore_global"
 
-          # Starship
-          ".config/starship.toml"
-        ];
-      };
+            # Starship
+            ".config/starship.toml"
+          ];
+        };
     };
 
     # Ensure persist directory exists
