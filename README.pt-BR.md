@@ -16,10 +16,36 @@ mesmo stack alvo definido no [TAbelhaOS](https://github.com/TAbelhaDev/tabelhaos
 
 ---
 
-> **Status: placeholder.** Sem flake, sem módulos, sem lógica de instalação
-> ainda — este repo existe pra reservar o nome e linkar a família. Ver o
-> [TAbelhaOS](https://github.com/TAbelhaDev/tabelhaos) pra saber o que é o
-> stack que isto vai instalar quando existir.
+> **Status: em desenvolvimento.** Flake e módulos básicos criados.
+
+## Como usar
+
+### Instalação interativa
+
+```bash
+# Clonar o repositório
+git clone https://github.com/TAbelhaDev/tabelhanix.git
+cd tabelhanix
+
+# Executar o instalador
+./scripts/install.sh
+```
+
+### Instalação manual
+
+```bash
+# Copiar configuração
+sudo cp modules/nixos.nix /etc/nixos/tabelhanix/
+sudo cp modules/nvidia.nix /etc/nixos/tabelhanix/  # opcional
+
+# Gerar configuração de hardware
+sudo nixos-generate-config --show-hardware-config > /etc/nixos/hardware-configuration.nix
+
+# Editar /etc/nixos/configuration.nix conforme necessário
+
+# Construir e instalar
+sudo nixos-rebuild switch
+```
 
 ## O que isto vai ser
 
@@ -34,6 +60,22 @@ do TAbelhaArch cobre pro Arch, tendo como alvo:
 - O conjunto de pacotes em
   [`manifest/packages.toml`](https://github.com/TAbelhaDev/tabelhaos/blob/main/manifest/packages.toml)
   do TAbelhaOS, usando a coluna `nixpkgs`
+
+## Configurações disponíveis
+
+| Configuração | Descrição |
+|---------------|-----------|
+| `tabelhanix` | Configuração desktop padrão |
+| `tabelhanix-nvidia` | Desktop com suporte a GPU NVIDIA |
+| `tabelhanix-minimal` | Configuração mínima |
+| `tabelhanix-laptop` | Configuração específica para laptop |
+| `tabelhanix-intel` | Desktop com GPU Intel |
+| `tabelhanix-amd` | Desktop com GPU AMD |
+
+## Documentação
+
+- [Guia de Uso](docs/usage.md)
+- [Arquitetura](docs/architecture.md)
 
 TAbelhaArch e TAbelhaNix não compartilham código de instalação — bash/gum e
 módulos Nix são diferentes o suficiente pra que forçar uma abstração
