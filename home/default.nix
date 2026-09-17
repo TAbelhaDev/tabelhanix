@@ -30,8 +30,7 @@
     # Git
     lazygit
 
-    # Neovim
-    neovim
+    # Tree-sitter + Node (for neovim plugins)
     tree-sitter
     nodejs
 
