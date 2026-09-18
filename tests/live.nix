@@ -87,8 +87,9 @@ pkgs.testers.nixosTest {
       machine.start()
       machine.wait_for_unit("multi-user.target")
 
-      # Start niri-session as the nixos user (manual launch, like the live ISO)
-      machine.succeed("su - nixos -c 'niri-session &'")
+      # Start niri-session as the nixos user
+      # Use full path since su login shell may not have NixOS PATH
+      machine.succeed("su - nixos -c 'export PATH=/run/current-system/sw/bin:$PATH && niri-session &'")
       machine.wait_until_succeeds("pgrep -u nixos -x niri", timeout=30)
       print("niri is running")
 
