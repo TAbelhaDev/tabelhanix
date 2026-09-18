@@ -52,3 +52,44 @@ jobs:
         run: |
           echo "Closure size for ${{ matrix.config }}:"
           du -shL result-${{ matrix.config }} 2>/dev/null || echo "Build artifact not found"
+
+  iso:
+    name: Build ISO
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Build ISO image
+        run: |
+          nix build \
+            --option narinfo-cache-negative-ttl 0 \
+            .#nixosConfigurations.tabelhanix-iso.config.system.build.isoImage \
+            -o result-iso
+
+      - name: ISO size
+        run: |
+          echo "ISO image:"
+          ls -lh result-iso/iso/*.iso 2>/dev/null || echo "ISO not found"
+
+  test:
+    name: VM test (live stack)
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Run live stack VM test
+        run: |
+          nix build \
+            --option narinfo-cache-negative-ttl 0 \
+            .#checks.x86_64-linux.tabelhanix-live \
+            -o result-test

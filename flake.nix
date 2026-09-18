@@ -308,6 +308,7 @@
           import ./tests {
             pkgs = nixpkgsFor.${system};
             lib = nixpkgs.lib;
+            inherit niri DankMaterialShell home-manager;
           }
         )
       );

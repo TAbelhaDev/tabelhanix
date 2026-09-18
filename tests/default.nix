@@ -1,6 +1,11 @@
 # TAbelhaNix — NixOS VM tests
-# These tests only validate that modules evaluate cleanly (no build needed)
-{ pkgs, lib }:
+{
+  pkgs,
+  lib,
+  niri,
+  DankMaterialShell,
+  home-manager,
+}:
 
 let
   mkEvalTest =
@@ -26,5 +31,16 @@ in
   tabelhanix-options = mkEvalTest {
     name = "tabelhanix-options";
     module = ../modules/options.nix;
+  };
+
+  # Live stack boot test (mirrors tabelhanix-iso module stack)
+  tabelhanix-live = import ./live.nix {
+    inherit
+      pkgs
+      lib
+      niri
+      DankMaterialShell
+      home-manager
+      ;
   };
 }
