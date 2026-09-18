@@ -37,10 +37,6 @@ pkgs.testers.nixosTest {
 
       system.stateVersion = "24.11";
 
-      # Minimal filesystem
-      fileSystems."/".fsType = "tmpfs";
-      fileSystems."/nix".device = "/dev/vda";
-
       boot.loader.systemd-boot.enable = true;
 
       # Wayland compositor needs virtio-gpu (same pattern as sway.nix test)
@@ -87,9 +83,8 @@ pkgs.testers.nixosTest {
       machine.start()
       machine.wait_for_unit("multi-user.target")
 
-      # Start niri-session as the nixos user
-      # Use full path since su login shell may not have NixOS PATH
-      machine.succeed("su - nixos -c 'export PATH=/run/current-system/sw/bin:$PATH && niri-session &'")
+      # Start niri as the nixos user via login shell (loads /etc/profile → PATH)
+      machine.succeed("su - nixos -c 'niri-session &'")
       machine.wait_until_succeeds("pgrep -u nixos -x niri", timeout=30)
       print("niri is running")
 

@@ -16,8 +16,6 @@ let
         imports = [ module ];
         system.stateVersion = "24.11";
         networking.hostName = "tabelhanix";
-        fileSystems."/".fsType = "tmpfs";
-        fileSystems."/nix".device = "/dev/sda1";
         boot.loader.systemd-boot.enable = true;
       };
       testScript = ''
