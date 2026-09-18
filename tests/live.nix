@@ -72,6 +72,7 @@ pkgs.testers.nixosTest {
 
       # Core packages for the live session
       environment.systemPackages = with pkgs; [
+        niri
         gitMinimal
         curl
         (writeShellScriptBin "tabelhanix-install" ''
