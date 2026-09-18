@@ -1,5 +1,5 @@
 # TAbelhaNix — Live stack VM test
-# Boots a minimal VM with niri + DMS, asserts they start via autologin
+# Boots a minimal VM with niri + DMS, asserts they start
 {
   pkgs,
   lib,
@@ -51,7 +51,7 @@ pkgs.testers.nixosTest {
         "virtio-gpu-pci"
       ];
 
-      # Live user setup (mirrors installation-device.nix profile)
+      # Live user setup
       users.mutableUsers = true;
       users.users.nixos = {
         isNormalUser = true;
@@ -64,18 +64,8 @@ pkgs.testers.nixosTest {
       };
       users.users.root.initialHashedPassword = "";
 
-      # Autologin
-      services.getty.autologinUser = "nixos";
-
       # niri package (same as flake override)
       programs.niri.package = pkgs.niri;
-
-      # Start niri on login for the autologin user
-      programs.bash.loginShellInit = ''
-        if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
-          exec niri-session
-        fi
-      '';
 
       # Allow passwordless sudo
       security.sudo.wheelNeedsPassword = false;
@@ -96,11 +86,12 @@ pkgs.testers.nixosTest {
       machine.start()
       machine.wait_for_unit("multi-user.target")
 
-      # Wait for autologin and niri-session to launch
+      # Start niri-session as the nixos user (manual launch, like the live ISO)
+      machine.succeed("su - nixos -c 'niri-session &'")
       machine.wait_until_succeeds("pgrep -u nixos -x niri", timeout=30)
       print("niri is running")
 
-      # DMS (dms binary) should be spawned by niri
+      # DMS (dms binary) should be spawned by niri config
       machine.wait_until_succeeds("pgrep -u nixos -x dms", timeout=30)
       print("dms is running")
 
